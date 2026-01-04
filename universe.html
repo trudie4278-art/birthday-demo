@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Universe</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at bottom, #09021a, #090116);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ⭐ BACKGROUND STARS */
+.stars {
+  position: fixed;
+  inset: 0;
+  background: url("images/stars.png"); /* nếu không có thì xoá */
+  opacity: 0.35;
+  z-index: -1;
+  animation: moveStars 90s linear infinite;
+}
+
+@keyframes moveStars {
+  from { background-position: 0 0; }
+  to { background-position: -1200px 1200px; }
+}
+
+/* 🌌 MAIN */
+.section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+p {
+  opacity: 0.85;
+  white-space: pre-line;
+}
+
+/* 🖼️ IMAGE */
+.image-wrapper {
+  position: relative;
+  width: 60%;
+  max-width: 520px;
+  height: 220px;
+  margin: 30px 0 15px;
+  overflow: hidden;
+}
+
+.universe-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  transition: opacity 0.4s, transform 0.6s;
+}
+
+/* ✨ CAPTION NỘI BỘ */
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px;
+
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  opacity: 0.85;
+
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0)
+  );
+}
+.universe-img:hover {
+  transform: scale(1.04);
+}
+
+/* 📝 CAPTION */
+.caption {
+  font-family: monospace;
+  font-size: 15px;
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+/* 🔘 CONTROLS */
+.controls {
+  display: flex;
+  gap: 18px;
+  margin: 15px 0;
+}
+
+button {
+  padding: 9px 22px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  color: white;
+  font-size: 14px;
+  transition: transform 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* ⚪ DOTS */
+.dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.3);
+}
+</style>
+</head>
+
+<body>
+<div class="stars"></div>
+
+<div class="section">
+  <h1 id="title" style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Welcome to your universe 🌌</h1>
+
+  <div class="image-wrapper">
+    <img id="universeImg" class="universe-img" src="" alt="Universe image">
+    <div class="caption" id="caption"></div>
+  </div>
+
+  <div class="controls">
+    <button onclick="prevImage()">◀ Prev</button>
+    <button onclick="nextImage()">Next ▶</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <p id="infoText"></p>
+</div>
+
+<script>
+const birthday = localStorage.getItem("birthday");
+const img = document.getElementById("universeImg");
+const captionEl = document.getElementById("caption");
+const dotsContainer = document.getElementById("dots");
+const infoText = document.getElementById("infoText");
+
+let gallery = [];
+let currentIndex = 0;
+let autoSlideInterval;
+
+/* 🎯 XÁC ĐỊNH CUNG + ẢNH */
+if (birthday) {
+  const [day, month] = birthday.split("/").map(Number);
+  let zodiac = "";
+
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) {
+    zodiac = "Aries";
+    gallery = [
+      { src: "images/bachduong.png", caption: "Fire and fearless beginnings" },
+      { src: "images/ari.webp", caption: "Energy born from the stars" },
+      { src: "images/aries.jpg", caption: "The spark of a new universe" }
+    ];
+  } else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) {
+    zodiac = "Taurus";
+    gallery = [
+      { src: "images/taurus.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/taurus2.jpg", caption: "Stability among the stars" },
+      { src: "images/taurus3.jpg", caption: "Stability among the stars" }
+
+    ];
+    } else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) {
+    zodiac = "Gemini";
+    gallery = [
+      { src: "images/gemini1.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/gemini2.jpg", caption: "Stability among the stars" },
+      { src: "images/gemini3.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) {
+    zodiac = "Cancer";
+    gallery = [
+      { src: "images/cancer1.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/cancer2.jpg", caption: "Stability among the stars" },
+      { src: "images/cancer3.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) {
+    zodiac = "Leo";
+    gallery = [
+      { src: "images/leo1.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/leo2.jpg", caption: "Stability among the stars" },
+      { src: "images/leo3.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) {
+    zodiac = "Virgo";
+    gallery = [
+      { src: "images/virgo2.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/virgo.jpg", caption: "Stability among the stars" },
+      { src: "images/virgo3.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) {
+    zodiac = "Libra";
+    gallery = [
+      { src: "images/libra.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/libra1.jpg", caption: "Stability among the stars" },
+      { src: "images/libra2.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) {
+    zodiac = "Scorpio";
+    gallery = [
+      { src: "images/scor.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/scor1.jpg", caption: "Stability among the stars" },
+      { src: "images/scor2.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) {
+    zodiac = "Sagittarius";
+    gallery = [
+      { src: "images/sag.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/sag2.jpg", caption: "Stability among the stars" },
+      { src: "images/sag3.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) {
+    zodiac = "Capricorn";
+    gallery = [
+      { src: "images/cap.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/cap3.jpg", caption: "Stability among the stars" },
+      { src: "images/cap4.jpg", caption: "Stability among the stars" }
+    ];
+    } else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) {
+    zodiac = "Aquarius";
+    gallery = [
+      { src: "images/aquar.jpg", caption: "Calm strength in the cosmos" },
+      { src: "images/aquar1.jpg", caption: "Stability among the stars" },
+      { src: "images/aquar2.jpg", caption: "Stability among the stars" }
+    ];
+
+    
+  } else {
+    zodiac = "Pisces";
+    gallery = [
+      { src: "images/pisces1.jpg", caption: "Dreams drifting through space" },
+      { src: "images/pisces2.jpg", caption: "Soft light of a cosmic ocean" },
+      { src: "images/pisces3.jpg", caption: "Soft light of a cosmic ocean" },
+    ];
+  }
+
+  infoText.innerText = `Born on ${birthday}\nZodiac: ${zodiac}\nExplore your universe ✨`;
+}
+
+/* 🖼️ HIỂN THỊ ẢNH */
+function showImage(index) {
+  img.style.opacity = 0;
+  setTimeout(() => {
+    img.src = gallery[index].src;
+    captionEl.innerText = gallery[index].caption;
+    updateDots();
+    img.style.opacity = 1;
+  }, 250);
+}
+
+/* ⚪ DOTS */
+function createDots() {
+  dotsContainer.innerHTML = "";
+  gallery.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    dot.onclick = () => {
+      currentIndex = i;
+      resetAutoSlide();
+      showImage(currentIndex);
+    };
+    dotsContainer.appendChild(dot);
+  });
+}
+
+function updateDots() {
+  document.querySelectorAll(".dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentIndex);
+  });
+}
+
+/* ▶ CONTROLS */
+function nextImage() {
+  currentIndex = (currentIndex + 1) % gallery.length;
+  resetAutoSlide();
+  showImage(currentIndex);
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + gallery.length) % gallery.length;
+  resetAutoSlide();
+  showImage(currentIndex);
+}
+
+/* ⏱️ AUTO SLIDE */
+function startAutoSlide() {
+  autoSlideInterval = setInterval(() => {
+    currentIndex = (currentIndex + 1) % gallery.length;
+    showImage(currentIndex);
+  }, 4000);
+}
+
+function resetAutoSlide() {
+  clearInterval(autoSlideInterval);
+  startAutoSlide();
+}
+
+/* 🚀 INIT */
+if (gallery.length > 0) {
+  createDots();
+  showImage(0);
+  startAutoSlide();
+}
+</script>
+</body>
+</html>

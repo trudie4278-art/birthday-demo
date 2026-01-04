@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter your birthday</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #2e0353, #000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: opacity 0.8s;
+    }
+
+    .container {
+      text-align: center;
+      animation: fadeIn 1.5s ease;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+      letter-spacing: 1px;
+    }
+
+    input {
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #8e2de2, #4a00e0);
+      color: white;
+      transition: transform 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="font-family:'Courier New', Courier, monospace">When were you born? ✨</h1>
+    <input type="text" id="birthday" placeholder="DD / MM / YYYY">
+    <br>
+    <button onclick="goNext()">Continue</button>
+  </div>
+
+  <script>
+    function goNext() {
+      const date = document.getElementById("birthday").value;
+      if (date.trim() === "") {
+        alert("Please enter your birthday ✨");
+        return;
+      }
+      localStorage.setItem("birthday", date);
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = "universe.html";
+      }, 800);
+    }
+  </script>
+</body>
+</html>
